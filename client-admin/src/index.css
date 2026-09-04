@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-black: #0b0b0c;
+  --color-brand-black-soft: #17171a;
+  --color-brand-black-border: #2a2a2e;
+  --color-brand-gold: #c9a227;
+  --color-brand-gold-soft: #e3cf87;
+  --color-brand-cream: #f7f5f0;
+  --font-serif-brand: Georgia, "Times New Roman", serif;
+}
+
+body {
+  margin: 0;
+}

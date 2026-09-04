@@ -1,0 +1,27 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "vektar-admin",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application",
+  },
+  "observability": {
+    "enabled": true,
+  },
+
+  "env": {
+    "staging": {
+      "name": "vektar-admin-staging",
+      "vars": {
+        "VITE_API_URL": "",
+      },
+    },
+    "production": {
+      "name": "vektar-admin",
+      "vars": {
+        "VITE_API_URL": "",
+      },
+    },
+  },
+}

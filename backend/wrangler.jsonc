@@ -1,0 +1,36 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "vektar-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  "observability": {
+    "enabled": true,
+  },
+  "r2_buckets": [
+    {
+      "binding": "PRODUCT_IMAGES",
+      "bucket_name": "project-images",
+    },
+  ],
+
+  "env": {
+    "staging": {
+      "name": "vektar-api-staging",
+      "r2_buckets": [
+        {
+          "binding": "PRODUCT_IMAGES",
+          "bucket_name": "project-images",
+        },
+      ],
+    },
+    "production": {
+      "name": "vektar-api",
+      "r2_buckets": [
+        {
+          "binding": "PRODUCT_IMAGES",
+          "bucket_name": "project-images",
+        },
+      ],
+    },
+  },
+}
