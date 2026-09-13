@@ -4,9 +4,7 @@ import { Animated, StyleSheet, Easing } from "react-native";
 const ENTRANCE_DURATION = 900;
 const UNDERLINE_DELAY = 550;
 const UNDERLINE_DURATION = 500;
-const EXIT_DELAY = 3800;
 const EXIT_DURATION = 500;
-const TOTAL_DURATION = EXIT_DELAY + EXIT_DURATION;
 
 const GOLD = "#C9A24B";
 
@@ -53,7 +51,13 @@ function useRing(delay: number) {
   return { scale, opacity };
 }
 
-export default function AnimatedSplash({ onFinish }: { onFinish: () => void }) {
+export default function AnimatedSplash({
+  shouldExit,
+  onFinish,
+}: {
+  shouldExit: boolean;
+  onFinish: () => void;
+}) {
   const logoOpacity = useRef(new Animated.Value(0)).current;
   const logoScale = useRef(new Animated.Value(0.55)).current;
   const logoRotate = useRef(new Animated.Value(1)).current;
@@ -65,8 +69,13 @@ export default function AnimatedSplash({ onFinish }: { onFinish: () => void }) {
   const ringA = useRing(150);
   const ringB = useRing(950);
 
+  // entrance + underline draw-in + the looping "breathe" pulse — plays
+  // indefinitely until `shouldExit` flips true, so this never goes blank
+  // while waiting on something slow (e.g. auth hydration taking longer
+  // than expected).
   useEffect(() => {
     let breatheLoop: Animated.CompositeAnimation | null = null;
+    let cancelled = false;
 
     Animated.parallel([
       Animated.timing(logoOpacity, {
@@ -88,6 +97,7 @@ export default function AnimatedSplash({ onFinish }: { onFinish: () => void }) {
         useNativeDriver: true,
       }),
     ]).start(() => {
+      if (cancelled) return;
       breatheLoop = Animated.loop(
         Animated.sequence([
           Animated.timing(breathe, {
@@ -116,32 +126,32 @@ export default function AnimatedSplash({ onFinish }: { onFinish: () => void }) {
       }).start();
     }, UNDERLINE_DELAY);
 
-    const exitTimer = setTimeout(() => {
-      Animated.parallel([
-        Animated.timing(exitOpacity, {
-          toValue: 0,
-          duration: EXIT_DURATION,
-          easing: Easing.in(Easing.cubic),
-          useNativeDriver: true,
-        }),
-        Animated.timing(exitTranslateY, {
-          toValue: -14,
-          duration: EXIT_DURATION,
-          easing: Easing.in(Easing.cubic),
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }, EXIT_DELAY);
-
-    const finishTimer = setTimeout(onFinish, TOTAL_DURATION);
-
     return () => {
+      cancelled = true;
       clearTimeout(underlineTimer);
-      clearTimeout(exitTimer);
-      clearTimeout(finishTimer);
       breatheLoop?.stop();
     };
-  }, [logoOpacity, logoScale, logoRotate, breathe, underlineWidth, exitOpacity, exitTranslateY, onFinish]);
+  }, [logoOpacity, logoScale, logoRotate, breathe, underlineWidth]);
+
+  useEffect(() => {
+    if (!shouldExit) return;
+    Animated.parallel([
+      Animated.timing(exitOpacity, {
+        toValue: 0,
+        duration: EXIT_DURATION,
+        easing: Easing.in(Easing.cubic),
+        useNativeDriver: true,
+      }),
+      Animated.timing(exitTranslateY, {
+        toValue: -14,
+        duration: EXIT_DURATION,
+        easing: Easing.in(Easing.cubic),
+        useNativeDriver: true,
+      }),
+    ]).start(({ finished }) => {
+      if (finished) onFinish();
+    });
+  }, [shouldExit, exitOpacity, exitTranslateY, onFinish]);
 
   const spin = logoRotate.interpolate({
     inputRange: [0, 1],

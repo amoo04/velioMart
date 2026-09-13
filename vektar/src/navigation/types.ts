@@ -13,7 +13,7 @@ export type RootStackParamList = {
   SignIn: undefined;
   SignUp: undefined;
   Checkout: undefined;
-  OrderConfirmation: { orderId: string };
+  OrderConfirmation: { orderId: string; amount: number };
   OrderDetail: { id: string };
   ProductDetail: { id: string };
   Settings: undefined;

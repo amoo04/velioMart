@@ -13,22 +13,38 @@ import AnimatedSplash from "./src/components/AnimatedSplash";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
+const MIN_SPLASH_TIME = 4000;
+// safety net: never block the app forever even if hydration hangs
+const MAX_HYDRATE_WAIT = 8000;
+
 function AppContent() {
   const { isHydrating } = useHydrateAuth();
-  const [showAnimatedSplash, setShowAnimatedSplash] = useState(true);
-
-  const handleSplashFinish = useCallback(() => {
-    setShowAnimatedSplash(false);
-  }, []);
+  const [minTimeElapsed, setMinTimeElapsed] = useState(false);
+  const [forceReady, setForceReady] = useState(false);
+  const [splashDone, setSplashDone] = useState(false);
 
   useEffect(() => {
     // hand off from the native splash to our animated one immediately,
     // so there's no blank-screen gap between them
     SplashScreen.hideAsync().catch(() => {});
+
+    const minTimer = setTimeout(() => setMinTimeElapsed(true), MIN_SPLASH_TIME);
+    const forceTimer = setTimeout(() => setForceReady(true), MAX_HYDRATE_WAIT);
+    return () => {
+      clearTimeout(minTimer);
+      clearTimeout(forceTimer);
+    };
   }, []);
 
-  if (showAnimatedSplash || isHydrating) {
-    return <AnimatedSplash onFinish={handleSplashFinish} />;
+  const handleSplashFinish = useCallback(() => {
+    setSplashDone(true);
+  }, []);
+
+  const authReady = !isHydrating || forceReady;
+  const shouldExit = minTimeElapsed && authReady;
+
+  if (!splashDone) {
+    return <AnimatedSplash shouldExit={shouldExit} onFinish={handleSplashFinish} />;
   }
 
   return (

@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "vektar-admin",
+  "name": "ileoja-client-admin",
   "compatibility_date": "2026-09-01",
   "assets": {
     "directory": "./dist",
@@ -18,9 +18,9 @@
       },
     },
     "production": {
-      "name": "vektar-admin",
+      "name": "ileoja-client-admin",
       "vars": {
-        "VITE_API_URL": "",
+        "VITE_API_URL": "https://ileoja-backend.isegunamoo.workers.dev",
       },
     },
   },

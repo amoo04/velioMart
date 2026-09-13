@@ -1,4 +1,4 @@
-export const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
+export const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5174";
 
 export function resolveMediaUrl(url: string | null | undefined): string {
   if (!url) return "";
@@ -89,13 +89,20 @@ export function apiDelete<T = unknown>(path: string) {
   return apiRequest<T>(path, { method: "DELETE" });
 }
 
-export async function apiUpload<T = unknown>(path: string, formData: FormData): Promise<ApiResponse<T>> {
+export async function apiUpload<T = unknown>(
+  path: string,
+  formData: FormData,
+): Promise<ApiResponse<T>> {
   const token = tokenStorage.get();
   const headers: Record<string, string> = {};
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
   try {
-    const res = await fetch(`${BASE_URL}${path}`, { method: "POST", headers, body: formData });
+    const res = await fetch(`${BASE_URL}${path}`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
     const body = await res.json().catch(() => null);
 
     if (!res.ok) {

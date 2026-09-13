@@ -14,14 +14,7 @@ import { useProfileQuery } from "../../profile/hooks/useProfile";
 import { useShippingZonesQuery } from "../../shipping/hooks/useShipping";
 import { findZoneForState, detectStateFromAddress, allCoveredStates } from "../../shipping/hooks/useShipping";
 import { formatPrice } from "../../../lib/format";
-
-type PaymentMethod = "BANK_TRANSFER" | "CREDIT_CARD" | "CASH_ON_DELIVERY";
-
-const paymentOptions: { key: PaymentMethod; label: string; icon: string }[] = [
-  { key: "BANK_TRANSFER", label: "Bank Transfer", icon: "business-outline" },
-  { key: "CREDIT_CARD", label: "Credit Card", icon: "card-outline" },
-  { key: "CASH_ON_DELIVERY", label: "Cash on Delivery", icon: "cash-outline" },
-];
+import { TRANSFER_DETAILS } from "../transferDetails";
 
 export default function CheckoutScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -30,7 +23,6 @@ export default function CheckoutScreen() {
   useProductsQuery();
   const summary = useCartSummary();
   const { placeOrder, isPlacing } = usePlaceOrder();
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("CREDIT_CARD");
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const [statePickerOpen, setStatePickerOpen] = useState(false);
   const [stateManuallyChosen, setStateManuallyChosen] = useState(false);
@@ -79,9 +71,9 @@ export default function CheckoutScreen() {
       const order = await placeOrder({
         shipping_address: `${profile?.name ?? ""}\n${profile?.phone ?? ""}\n${profile?.address ?? ""}`.trim(),
         shipping_zone_id: matchedZone.id,
-        payment_method: paymentMethod,
+        payment_method: "BANK_TRANSFER",
       });
-      navigation.replace("OrderConfirmation", { orderId: String(order.id) });
+      navigation.replace("OrderConfirmation", { orderId: String(order.id), amount: total });
     } catch (err: any) {
       Alert.alert("Order Failed", err.message ?? "Something went wrong. Please try again.");
     }
@@ -192,23 +184,33 @@ export default function CheckoutScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Choose Payment Method</Text>
+          <Text style={styles.sectionTitle}>Payment Method</Text>
           <View style={styles.card}>
-            {paymentOptions.map((opt) => (
-              <Pressable
-                key={opt.key}
-                style={[styles.paymentRow, opt.key === "CASH_ON_DELIVERY" && { borderBottomWidth: 0 }]}
-                onPress={() => setPaymentMethod(opt.key)}
-              >
-                <View style={styles.paymentLeft}>
-                  <Ionicons name={opt.icon as any} size={22} color="#333" />
-                  <Text style={styles.paymentLabel}>{opt.label}</Text>
-                </View>
-                <View style={[styles.radio, paymentMethod === opt.key && styles.radioActive]}>
-                  {paymentMethod === opt.key && <View style={styles.radioDot} />}
-                </View>
-              </Pressable>
-            ))}
+            <View style={styles.paymentRow}>
+              <View style={styles.paymentLeft}>
+                <Ionicons name="business-outline" size={22} color="#333" />
+                <Text style={styles.paymentLabel}>Bank Transfer</Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.transferCard}>
+            <Text style={styles.transferTitle}>Transfer to this account</Text>
+            <View style={styles.transferRow}>
+              <Text style={styles.transferLabel}>Bank</Text>
+              <Text style={styles.transferValue} selectable>{TRANSFER_DETAILS.bank}</Text>
+            </View>
+            <View style={styles.transferRow}>
+              <Text style={styles.transferLabel}>Account Number</Text>
+              <Text style={styles.transferValue} selectable>{TRANSFER_DETAILS.accountNumber}</Text>
+            </View>
+            <View style={styles.transferRow}>
+              <Text style={styles.transferLabel}>Account Name</Text>
+              <Text style={styles.transferValue} selectable>{TRANSFER_DETAILS.accountName}</Text>
+            </View>
+            <Text style={styles.transferHint}>
+              Send the total amount above, then place your order. Your order will be confirmed once payment is received.
+            </Text>
           </View>
         </View>
       </ScrollView>
@@ -308,6 +310,23 @@ const styles = StyleSheet.create({
   },
   paymentLeft: { flexDirection: "row", alignItems: "center", gap: 10 },
   paymentLabel: { fontSize: 15, color: "#333" },
+  transferCard: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 16,
+    marginTop: 10,
+    gap: 8,
+    shadowColor: "#000",
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 1,
+  },
+  transferTitle: { fontSize: 14, fontWeight: "700", color: "#000", marginBottom: 4 },
+  transferRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  transferLabel: { fontSize: 13, color: "#888" },
+  transferValue: { fontSize: 14, fontWeight: "600", color: "#000" },
+  transferHint: { fontSize: 12, color: "#999", marginTop: 6, lineHeight: 17 },
   radio: {
     width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: "#ccc",
     justifyContent: "center", alignItems: "center",
