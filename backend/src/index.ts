@@ -37,6 +37,7 @@ app.use(
       "http://localhost:8082",
       "http://localhost:5173",
       "http://localhost:5174",
+      "https://ileoja-client-admin.isegunamoo.workers.dev",
     ],
   }),
 );
