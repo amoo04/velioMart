@@ -2,7 +2,7 @@ import { storage } from "./storage";
 
 export const BASE_URL =
   process.env.EXPO_PUBLIC_API_URL ??
-  "https://liability-yesterday-relatable.ngrok-free.dev";
+  "https://ileoja-backend.isegunamoo.workers.dev";
 
 export interface ApiResponse<T = unknown> {
   data?: T;
