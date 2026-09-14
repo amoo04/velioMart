@@ -2,6 +2,7 @@ import { createContext, useContext, useCallback, type ReactNode } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { apiPost } from "./api";
 import { storage } from "./storage";
+import { queryClient } from "./query-client";
 import { hasPermission, isAdmin as checkIsAdmin, type Permission } from "./permissions";
 import { setCredentials, logout as logoutAction } from "../features/auth/slice/authSlice";
 import type { RootState, AppDispatch } from "../store-config/store";
@@ -37,6 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         password,
       });
       if (res.error) throw new Error(res.error);
+      queryClient.clear();
       await storage.setToken(res.data!.token);
       await storage.setUser(res.data!.user);
       dispatch(setCredentials({ user: res.data!.user, token: res.data!.token }));
@@ -53,6 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         role,
       });
       if (res.error) throw new Error(res.error);
+      queryClient.clear();
       await storage.setToken(res.data!.token);
       await storage.setUser(res.data!.user);
       dispatch(setCredentials({ user: res.data!.user, token: res.data!.token }));
@@ -61,6 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const signOut = useCallback(() => {
+    queryClient.clear();
     storage.removeToken();
     storage.removeUser();
     dispatch(logoutAction());
