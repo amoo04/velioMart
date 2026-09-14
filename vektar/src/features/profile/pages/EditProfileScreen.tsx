@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { View, Text, TextInput, Pressable, Image, StyleSheet, Alert, ActivityIndicator } from "react-native";
+import { View, Text, TextInput, Pressable, StyleSheet, Alert, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useProfileQuery } from "../hooks/useProfile";
 import { useUpdateProfile } from "../hooks/useUpdateProfile";
+import { Avatar } from "../../../components/Avatar";
 
 export default function EditProfileScreen() {
   const navigation = useNavigation();
@@ -53,8 +54,13 @@ export default function EditProfileScreen() {
       ) : (
         <>
           <View style={styles.avatarSection}>
-            <Image source={require("../../../../assets/profile/profil01.jpg")} style={styles.avatar} />
-            <Pressable style={styles.changePhotoButton}>
+            <View style={styles.avatarWrapper}>
+              <Avatar name={name} size={80} />
+            </View>
+            <Pressable
+              style={styles.changePhotoButton}
+              onPress={() => Alert.alert("Coming Soon", "Photo uploads aren't available yet.")}
+            >
               <Text style={styles.changePhotoText}>Change Photo</Text>
             </Pressable>
           </View>
@@ -139,11 +145,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 28,
   },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "#e0e0e0",
+  avatarWrapper: {
     marginBottom: 12,
   },
   changePhotoButton: {

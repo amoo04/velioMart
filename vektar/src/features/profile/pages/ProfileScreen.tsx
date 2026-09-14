@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Image, StyleSheet, Alert, ActivityIndicator } from "react-native";
+import { View, Text, Pressable, StyleSheet, Alert, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { useAuth } from "../../../lib/auth-context";
 import { useProfileQuery } from "../hooks/useProfile";
 import { useOrdersQuery } from "../../orders/hooks/useOrders";
+import { Avatar } from "../../../components/Avatar";
 import type { RootState } from "../../../store-config/store";
 import type { RootStackParamList, TabParamList } from "../../../navigation/types";
 
@@ -81,10 +82,7 @@ export default function ProfileScreen() {
         ) : (
         <>
           <View style={styles.profileCard}>
-            <Image
-              source={require("../../../../assets/profile/profil01.jpg")}
-              style={styles.avatar}
-            />
+            <Avatar name={displayName} size={60} />
             <View style={styles.profileInfo}>
               <Text style={styles.name}>{displayName}</Text>
               <Text style={styles.email}>{displayEmail}</Text>
@@ -182,12 +180,6 @@ const styles = StyleSheet.create({
     gap: 14,
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0",
-  },
-  avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "#e0e0e0",
   },
   profileInfo: { flex: 1, gap: 2 },
   name: { fontSize: 18, fontWeight: "700" },
