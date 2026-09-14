@@ -83,7 +83,7 @@ export const authService = {
     }
 
     const resetToken = jwt.sign(
-      { sub: String(user.id), type: "password_reset" },
+      { sub: user.uuid, type: "password_reset" },
       JWT_SECRET,
       { expiresIn: "15m" },
     );
@@ -105,8 +105,13 @@ export const authService = {
       throw new Error("Invalid reset token");
     }
 
+    const user = await authRepository.findByUuid(payload.sub);
+    if (!user) {
+      throw new Error("Invalid or expired reset token");
+    }
+
     const hashedPassword = await bcryptjs.hash(newPassword, 10);
-    await authRepository.updatePassword(Number(payload.sub), hashedPassword);
+    await authRepository.updatePassword(user.id, hashedPassword);
 
     return { message: "Password reset successfully" };
   },
