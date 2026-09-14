@@ -30,7 +30,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-brand-black px-4">
       <div className="w-full max-w-sm rounded-xl border-t-4 border-brand-gold bg-brand-black-soft p-8 shadow-lg">
         <span className="font-serif-brand text-xl tracking-wide text-brand-gold">
-          VEKTAR <span className="text-brand-gold-soft/80">Admin</span>
+          VELIOMART <span className="text-brand-gold-soft/80">Admin</span>
         </span>
         <p className="mt-2 text-sm text-gray-400">Manage products, categories, and orders.</p>
 

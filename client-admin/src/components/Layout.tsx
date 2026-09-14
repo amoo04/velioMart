@@ -72,7 +72,7 @@ export default function Layout() {
       <aside className="flex w-60 shrink-0 flex-col bg-brand-black">
         <div className="border-b border-white/10 px-5 py-5">
           <span className="font-serif-brand text-lg tracking-wide text-brand-gold">
-            VEKTAR <span className="text-brand-gold-soft/80">Admin</span>
+            VELIOMART <span className="text-brand-gold-soft/80">Admin</span>
           </span>
         </div>
 

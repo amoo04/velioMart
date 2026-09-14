@@ -181,7 +181,7 @@ export default function AnimatedSplash({
       />
 
       <Animated.Image
-        source={require("../../assets/logo/image.png")}
+        source={require("../../assets/logo/icon-1024.png")}
         style={[
           styles.logo,
           {

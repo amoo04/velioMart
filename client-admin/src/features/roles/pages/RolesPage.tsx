@@ -31,7 +31,7 @@ export default function RolesPage() {
       <div>
         <h1 className="font-serif-brand text-2xl font-semibold text-brand-black">Roles & Permissions</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Vektar has two roles today: <span className="font-medium text-gray-700">Admin</span> (full access
+          VelioMart has two roles today: <span className="font-medium text-gray-700">Admin</span> (full access
           to this dashboard) and <span className="font-medium text-gray-700">Customer</span> (storefront
           only). Promote or demote accounts below.
         </p>

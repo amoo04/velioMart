@@ -64,7 +64,7 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <Animated.Image
           entering={FadeInUp.duration(500)}
-          source={require("../../../../assets/logo/image.png")}
+          source={require("../../../../assets/logo/wordmark.png")}
           style={styles.logo}
         />
         <Pressable onPress={() => navigation.navigate("Cart")} style={styles.cartBtn}>
@@ -207,12 +207,12 @@ export default function HomeScreen() {
         >
           <Animated.Image
             entering={FadeIn.duration(400)}
-            source={require("../../../../assets/logo/image.png")}
+            source={require("../../../../assets/logo/wordmark.png")}
             style={styles.brandLogo}
           />
           <Text style={styles.brandTagline}>Luxury Perfume House</Text>
           <Text style={styles.brandStory}>
-            Crafting exquisite fragrances since 2020. Each scent is meticulously blended using the finest ingredients from around the world.
+            VelioMart brings you exquisite fragrances, meticulously curated using the finest ingredients from around the world.
           </Text>
         </Animated.View>
       </ScrollView>
