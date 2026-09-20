@@ -1,5 +1,3 @@
-Here's the plain-text version:
-
 Avelio Mart
 
 A full-stack e-commerce mobile platform — shopper-facing storefront, backend API, and a merchant admin dashboard, built solo end to end.
