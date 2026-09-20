@@ -15,7 +15,7 @@ Frontend: React Native
 Backend: Node.js, Hono
 Database: PostgreSQL, Drizzle ORM
 Validation: Zod
-Deployment: Cloudflare Workers
+Deployment: Workers
 
 What I built
 
